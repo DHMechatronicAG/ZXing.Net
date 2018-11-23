@@ -359,6 +359,7 @@
     <Compile Include="pdf417\decoder\PDF417ScanningDecoder.cs" />
     <Compile Include="pdf417\detector\Detector.cs" />
     <Compile Include="pdf417\detector\PDF417DetectorResult.cs" />
+    <Compile Include="pdf417\encoder\PDF417AspectRatio.cs" />
     <Compile Include="pdf417\encoder\BarcodeMatrix.cs" />
     <Compile Include="pdf417\encoder\BarcodeRow.cs" />
     <Compile Include="pdf417\encoder\Compaction.cs" />
@@ -410,7 +411,6 @@
     <Compile Include="ResultMetadataType.cs" />
     <Compile Include="ResultPoint.cs" />
     <Compile Include="ResultPointCallback.cs" />
-    <Compile Include="RGB565LuminanceSource.cs" />
     <Compile Include="RGBLuminanceSource.cs" />
     <Compile Include="silverlight\BrowsableAttribute.cs" />
     <Compile Include="silverlight\NonSerializedAttribute.cs" />
@@ -479,9 +479,9 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
-  <PropertyGroup Condition=" !Exists('$(MSBuildThisFileDirectory)..\..\Key\private.snk') ">
-    <PreBuildEvent Condition=" '$(OS)' == 'Unix' ">cp "$(MSBuildThisFileDirectory)..\..\Key\dummy-private.snk" "$(MSBuildThisFileDirectory)..\..\Key\private.snk"</PreBuildEvent>
-    <PreBuildEvent Condition=" '$(OS)' != 'Unix' ">copy "$(MSBuildThisFileDirectory)..\..\Key\dummy-private.snk" "$(MSBuildThisFileDirectory)..\..\Key\private.snk"</PreBuildEvent>
+  <PropertyGroup Condition="!Exists('$(MSBuildProjectDirectory)\..\..\Key\private.snk')">
+    <PreBuildEvent Condition=" '$(OS)' == 'Unix' ">cp "$(MSBuildProjectDirectory)\..\..\Key\dummy-private.snk" "$(MSBuildProjectDirectory)\..\..\Key\private.snk"</PreBuildEvent>
+    <PreBuildEvent Condition=" '$(OS)' != 'Unix' ">copy "$(MSBuildProjectDirectory)\..\..\Key\dummy-private.snk" "$(MSBuildProjectDirectory)\..\..\Key\private.snk"</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
