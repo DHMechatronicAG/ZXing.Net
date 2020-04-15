@@ -182,7 +182,19 @@ namespace ZXing.QrCode.Internal
             //  Choose the mask pattern and set to "qrCode".
             var dimension = version.DimensionForVersion;
             var matrix = new ByteMatrix(dimension, dimension);
-            var maskPattern = chooseMaskPattern(finalBits, ecLevel, version, matrix);
+
+            // Enable manual selection of the pattern to be used via hint
+            var maskPattern = -1;
+            if (hints != null && hints.ContainsKey(EncodeHintType.QR_MASK_PATTERN))
+            {
+                var hintMaskPattern = Int32.Parse(hints[EncodeHintType.QR_MASK_PATTERN].ToString());
+                maskPattern = QRCode.isValidMaskPattern(hintMaskPattern) ? hintMaskPattern : -1;
+            }
+
+            if (maskPattern == -1)
+            {
+                maskPattern = chooseMaskPattern(finalBits, ecLevel, version, matrix);
+            }
             qrCode.MaskPattern = maskPattern;
 
             // Build the matrix and set it to "qrCode".
@@ -760,8 +772,12 @@ namespace ZXing.QrCode.Internal
             {
                 throw new WriterException(uee.Message, uee);
             }
-            int length = bytes.Length;
-            for (int i = 0; i < length; i += 2)
+            if (bytes.Length % 2 != 0)
+            {
+                throw new WriterException("Kanji byte size not even");
+            }
+            int maxI = bytes.Length - 1; // bytes.length must be even
+            for (int i = 0; i < maxI; i += 2)
             {
                 int byte1 = bytes[i] & 0xFF;
                 int byte2 = bytes[i + 1] & 0xFF;

@@ -145,13 +145,8 @@ namespace ZXing.QrCode.Internal
                 return null;
             }
 
-#if WindowsCE
-         var resultString = result.ToString().Replace("\n", "\r\n");
-#else
-            var resultString = result.ToString().Replace("\r\n", "\n").Replace("\n", Environment.NewLine);
-#endif
             return new DecoderResult(bytes,
-                                     resultString,
+                                     result.ToString(),
                                      byteSegments.Count == 0 ? null : byteSegments,
                                      ecLevel == null ? null : ecLevel.ToString(),
                                      symbolSequence, parityData);
@@ -183,7 +178,7 @@ namespace ZXing.QrCode.Internal
                 // Each 13 bits encodes a 2-byte character
                 int twoBytes = bits.readBits(13);
                 int assembledTwoBytes = ((twoBytes / 0x060) << 8) | (twoBytes % 0x060);
-                if (assembledTwoBytes < 0x003BF)
+                if (assembledTwoBytes < 0x00A00)
                 {
                     // In the 0xA1A1 to 0xAAFE range
                     assembledTwoBytes += 0x0A1A1;

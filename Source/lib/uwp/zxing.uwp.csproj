@@ -626,6 +626,9 @@
     <Compile Include="..\oned\OneDReader.cs">
       <Link>oned\OneDReader.cs</Link>
     </Compile>
+    <Compile Include="..\oned\PharmaCodeReader.cs">
+      <Link>oned\PharmaCodeReader.cs</Link>
+    </Compile>
     <Compile Include="..\oned\PlesseyWriter.cs">
       <Link>oned\PlesseyWriter.cs</Link>
     </Compile>
@@ -815,8 +818,14 @@
     <Compile Include="..\pdf417\encoder\PDF417HighLevelEncoder.cs">
       <Link>pdf417\encoder\PDF417HighLevelEncoder.cs</Link>
     </Compile>
+    <Compile Include="..\pdf417\encoder\PDF417OptionalMacroFields.cs">
+      <Link>pdf417\encoder\PDF417OptionalMacroFields.cs</Link>
+    </Compile>
     <Compile Include="..\pdf417\PDF417Common.cs">
       <Link>pdf417\PDF417Common.cs</Link>
+    </Compile>
+    <Compile Include="..\pdf417\PDF417MacroMetadata.cs">
+      <Link>pdf417\PDF417MacroMetadata.cs</Link>
     </Compile>
     <Compile Include="..\pdf417\PDF417Reader.cs">
       <Link>pdf417\PDF417Reader.cs</Link>

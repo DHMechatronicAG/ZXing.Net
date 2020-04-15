@@ -111,6 +111,18 @@ namespace ZXing.PDF417
                         }
                     }
                 }
+                if (hints.ContainsKey(EncodeHintType.PDF417_IMAGE_ASPECT_RATIO) && hints[EncodeHintType.PDF417_IMAGE_ASPECT_RATIO] != null)
+                {
+                    var value = hints[EncodeHintType.PDF417_IMAGE_ASPECT_RATIO];
+                    try
+                    {
+                        encoder.setDesiredAspectRatio(Convert.ToSingle(value));
+                    }
+                    catch
+                    {
+                        // User passed in something that wasn't convertible to single.
+                    }
+                }
                 if (hints.ContainsKey(EncodeHintType.ERROR_CORRECTION) && hints[EncodeHintType.ERROR_CORRECTION] != null)
                 {
                     var value = hints[EncodeHintType.ERROR_CORRECTION];
@@ -144,6 +156,12 @@ namespace ZXing.PDF417
                 if (hints.ContainsKey(EncodeHintType.DISABLE_ECI) && hints[EncodeHintType.DISABLE_ECI] != null)
                 {
                     encoder.setDisableEci(Convert.ToBoolean(hints[EncodeHintType.DISABLE_ECI].ToString()));
+                }
+
+                // Check for PDF417 Macro options
+                if (hints.ContainsKey(EncodeHintType.PDF417_MACRO_META_DATA))
+                {
+                    encoder.setMetaData((PDF417MacroMetadata)hints[EncodeHintType.PDF417_MACRO_META_DATA]);
                 }
             }
 

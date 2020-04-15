@@ -27,6 +27,10 @@ namespace ZXing.OneD
     /// </summary>
     public abstract class OneDimensionalCodeWriter : Writer
     {
+        private static readonly System.Text.RegularExpressions.Regex NUMERIC = new System.Text.RegularExpressions.Regex("[0-9]+");
+
+        protected abstract IList<BarcodeFormat> SupportedWriteFormats { get; }
+
         /// <summary>
         /// Encode a barcode using the default settings.
         /// </summary>
@@ -50,10 +54,10 @@ namespace ZXing.OneD
         /// or {@code height}, {@code IllegalArgumentException} is thrown.
         /// </summary>
         public virtual BitMatrix encode(String contents,
-                                BarcodeFormat format,
-                                int width,
-                                int height,
-                                IDictionary<EncodeHintType, object> hints)
+            BarcodeFormat format,
+            int width,
+            int height,
+            IDictionary<EncodeHintType, object> hints)
         {
             if (String.IsNullOrEmpty(contents))
             {
@@ -64,6 +68,18 @@ namespace ZXing.OneD
             {
                 throw new ArgumentException("Negative size is not allowed. Input: "
                                             + width + 'x' + height);
+            }
+            var supportedFormats = SupportedWriteFormats;
+            if (supportedFormats != null && !supportedFormats.Contains(format))
+            {
+#if WindowsCE || WINDOWS_PHONE70 || NET20 || NET35 || UNITY || PORTABLE
+                var supportedFormatsArray = new string[supportedFormats.Count];
+                for (var i = 0; i < supportedFormats.Count; i++)
+                    supportedFormatsArray[i] = supportedFormats[i].ToString();
+                throw new ArgumentException("Can only encode " + string.Join(", ", supportedFormatsArray) + ", but got " + format);
+#else
+                throw new ArgumentException("Can only encode " + string.Join(", ", supportedFormats) + ", but got " + format);
+#endif
             }
 
             int sidesMargin = DefaultMargin;
@@ -105,6 +121,18 @@ namespace ZXing.OneD
             return output;
         }
 
+        /// <summary>
+        /// Throw ArgumentException if input contains characters other than digits 0-9.
+        /// </summary>
+        /// <param name="contents">string to check for numeric characters</param>
+        /// <exception cref="ArgumentException">if input contains characters other than digits 0-9.</exception>
+        protected static void checkNumeric(String contents)
+        {
+            if (!NUMERIC.Match(contents).Success)
+            {
+                throw new ArgumentException("Input should only contain digits 0-9");
+            }
+        }
 
         /// <summary>
         /// Appends the given pattern to the target array starting at pos.

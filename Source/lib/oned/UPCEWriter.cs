@@ -32,18 +32,11 @@ namespace ZXing.OneD
                                        (7 * 6) + // bars
                                        6; // end guard
 
-        public override BitMatrix encode(String contents,
-           BarcodeFormat format,
-           int width,
-           int height,
-           IDictionary<EncodeHintType, object> hints)
-        {
-            if (format != BarcodeFormat.UPC_E)
-            {
-                throw new ArgumentException("Can only encode UPC_E, but got " + format);
-            }
+        private static readonly IList<BarcodeFormat> supportedWriteFormats = new List<BarcodeFormat> { BarcodeFormat.UPC_E };
 
-            return base.encode(contents, format, width, height, hints);
+        protected override IList<BarcodeFormat> SupportedWriteFormats
+        {
+            get { return supportedWriteFormats; }
         }
 
         public override bool[] encode(String contents)
@@ -63,7 +56,7 @@ namespace ZXing.OneD
                 case 8:
                     try
                     {
-                        if (!UPCEANReader.checkStandardUPCEANChecksum(contents))
+                        if (!UPCEANReader.checkStandardUPCEANChecksum(UPCEReader.convertUPCEtoUPCA(contents)))
                         {
                             throw new ArgumentException("Contents do not pass checksum");
                         }
@@ -74,8 +67,10 @@ namespace ZXing.OneD
                     }
                     break;
                 default:
-                    throw new ArgumentException("Requested contents should be 8 digits long, but got " + length);
+                    throw new ArgumentException("Requested contents should be 7 or 8 digits long, but got " + length);
             }
+
+            checkNumeric(contents);
 
             int firstDigit = int.Parse(contents.Substring(0, 1));
             if (firstDigit != 0 && firstDigit != 1)
