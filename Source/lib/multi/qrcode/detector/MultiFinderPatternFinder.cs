@@ -79,6 +79,7 @@ namespace ZXing.Multi.QrCode.Internal
         /// <p>Creates a finder that will search the image for three finder patterns.</p>
         ///
         /// <param name="image">image to search</param>
+        /// <param name="resultPointCallback">callback for result points</param>
         /// </summary>
         internal MultiFinderPatternFinder(BitMatrix image, ResultPointCallback resultPointCallback)
             : base(image, resultPointCallback)
@@ -256,7 +257,7 @@ namespace ZXing.Multi.QrCode.Internal
             for (int i = iSkip - 1; i < maxI; i += iSkip)
             {
                 // Get a row of black/white values
-                clearCounts(stateCount);
+                doClearCounts(stateCount);
                 int currentState = 0;
                 for (int j = 0; j < maxJ; j++)
                 {
@@ -284,12 +285,12 @@ namespace ZXing.Multi.QrCode.Internal
                                     // Yes
                                     // Clear state to start looking again
                                     currentState = 0;
-                                    clearCounts(stateCount);
+                                    doClearCounts(stateCount);
                                 }
                                 else
                                 {
                                     // No, shift counts back by two
-                                    shiftCounts2(stateCount);
+                                    doShiftCounts2(stateCount);
                                     currentState = 3;
                                 }
                             }
